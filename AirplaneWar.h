@@ -28,6 +28,11 @@ public:
 // й╣ож
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+
+private:
+	ULONG_PTR m_tokenGdiplus;
+	Gdiplus::GdiplusStartupInput input;
+	Gdiplus::GdiplusStartupOutput output;
 };
 
 extern CAirplaneWarApp theApp;

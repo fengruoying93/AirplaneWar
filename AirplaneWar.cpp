@@ -70,6 +70,8 @@ BOOL CAirplaneWarApp::InitInstance()
 
 	CWinAppEx::InitInstance();
 
+	//gdi+初始化
+	Status s = GdiplusStartup(&m_tokenGdiplus, &input, &output);
 
 	// 初始化 OLE 库
 	if (!AfxOleInit())

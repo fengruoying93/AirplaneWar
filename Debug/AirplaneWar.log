@@ -1,8 +1,11 @@
-﻿生成启动时间为 2020/4/5 12:58:39。
+﻿生成启动时间为 2020/4/19 17:28:47。
      1>项目“E:\lff\VS_project\AirplaneWar\AirplaneWar\AirplaneWar.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\AirplaneWar.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt AirplaneWarView.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\AirplaneWar.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt AirplaneWar.cpp AirplaneWarView.cpp
          AirplaneWarView.cpp
+         正在生成代码...
+         正在跳过...(未检测到相关更改)
+         AirplaneWar.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\lff\VS_project\AirplaneWar\Debug\AirplaneWar.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"E:\lff\VS_project\AirplaneWar\Debug\AirplaneWar.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\lff\VS_project\AirplaneWar\Debug\AirplaneWar.lib" /MACHINE:X86 Debug\AirplaneWar.res
          Debug\AirplaneWar.obj
@@ -16,4 +19,4 @@
 
 生成成功。
 
-已用时间 00:00:01.08
+已用时间 00:00:00.93

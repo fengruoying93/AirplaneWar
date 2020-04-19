@@ -17,6 +17,7 @@ protected: // 仅从序列化创建
 	Zidan zidan[30];//保持游戏界面有子弹30颗
 	Zhanji zhanji;//战机一台
 	CBitmap bkg;
+	Gdiplus::Image *img_bkg; //Gdi+背景图
 	CDC m_cacheDC;   //缓冲DC
 
 // 特性
@@ -25,7 +26,8 @@ public:
 
 // 操作
 public:
-	void RefreshPlane(CDC *pDC);
+	void GameRunDraw();
+	void RefreshPlane(CDC *pDC, Graphics *gh);
 
 // 重写
 public:

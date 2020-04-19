@@ -48,7 +48,7 @@ BOOL CAirplaneWarView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: 在此处通过修改
 	//  CREATESTRUCT cs 来修改窗口类或样式
-	bkg.LoadBitmap(IDB_BITMAP1);
+	//bkg.LoadBitmap(IDB_BITMAP1);
 	return CView::PreCreateWindow(cs);
 }
 
@@ -63,6 +63,7 @@ int CAirplaneWarView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	int x_num = 50;
 	for (int i = 0; i < 5; i++)
 	{
+		xiaodiji[i].img = Image::FromFile(_T("res//xiaodiji.png"));
 		xiaodiji[i].plane_x += x_num;//开始时，小飞机的横坐标相隔30
 		x_num += 50;
 		xiaodiji[i].plane_y -= x_num;//开始时，小飞机的纵坐标相隔30，起到延迟出现的效果
@@ -71,11 +72,16 @@ int CAirplaneWarView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	int num = 0;
 	for (int j2 = 0;j2 < 30;j2++)
 	{
+		zidan[j2].img = Image::FromFile(_T("res//zidan.png"));
+		zidan[j2].img_boom = Image::FromFile(_T("res//zidan_boom.png"));
 		zidan[j2].plane_y -= (num+20);//开始时，子弹的纵坐标相隔25，起到延迟出现的效果
 		zidan[j2].plane_x = zhanji.plane_x + 35;//子弹的横坐标在战机的正中间
 		num += 50;
 	}
- 
+	dadiji.img = Image::FromFile(_T("res//dadiji.png"));
+	zhanji.img = Image::FromFile(_T("res//zhanji.png"));
+	zhanji.img_boom = Image::FromFile(_T("res//zhanji_boom.png"));
+	img_bkg = Image::FromFile(_T("res//bkg.png"));
 	return 0;
 }
 
@@ -87,7 +93,7 @@ void CAirplaneWarView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-#if 1
+#if 0
 	BITMAP bmp;
     bkg.GetBitmap(&bmp); //获取图片大小信息
     //CDC dcCompatible;
@@ -100,14 +106,47 @@ void CAirplaneWarView::OnDraw(CDC* pDC)
                     bmp.bmWidth,bmp.bmHeight,SRCCOPY);
 
 #endif
+
 }
 
-void CAirplaneWarView::RefreshPlane(CDC *cDC)
+void CAirplaneWarView::GameRunDraw()
+{
+	HDC hdc = ::GetDC(m_hWnd);
+	CDC *cDC = CClientDC::FromHandle(hdc);   //获得当前窗口的DC   
+	CRect rect;
+	GetClientRect(rect);
+	RectF m_rect(0, 0, 450, 600);
+#if 1
+	CDC m_dcMemory;   //双缓冲DC
+	CBitmap bmp;
+	bmp.CreateCompatibleBitmap(cDC, rect.Width(), rect.Height());
+	m_dcMemory.CreateCompatibleDC(cDC);
+	CBitmap *pOldBitmap = m_dcMemory.SelectObject(&bmp);
+
+	Graphics gh(m_dcMemory.GetSafeHdc()); //构造对象
+	gh.Clear(Color::White); //清除背景
+	gh.ResetClip();
+
+	gh.DrawImage(img_bkg, rect.left, rect.top, rect.Width(), rect.Height());
+	//gh.DrawImage(img, m_rect);
+
+	RefreshPlane(cDC, &gh);
+	
+	BitBlt(hdc, 0, 0, rect.Width(), rect.Height(), m_dcMemory.GetSafeHdc(), 0, 0, SRCCOPY);
+	
+	cDC->DeleteDC();
+	
+#endif
+	
+	return;
+}
+
+void CAirplaneWarView::RefreshPlane(CDC *cDC, Graphics *gh)
 {
 	if(!cDC)
 		return;
 	//cDC = &m_cacheDC;
-	zhanji.JIDRAW(cDC);//画战机
+	zhanji.JIDRAW(cDC, gh);//画战机
  
 	//子弹
 	for (int j1 = 0;j1 < 30;j1++)
@@ -116,7 +155,7 @@ void CAirplaneWarView::RefreshPlane(CDC *cDC)
 		{
 			int xx = dadiji.plane_x;
 			int yy = dadiji.plane_y;
-			zidan[j1].JIDRAW_Boom(cDC,xx,yy );//若两者产生碰撞，则出现爆炸效果
+			zidan[j1].JIDRAW_Boom(cDC,xx,yy, gh);//若两者产生碰撞，则出现爆炸效果
 			zidan[j1].plane_y = zhanji.plane_y - 20;
 			zidan[j1].plane_x = zhanji.plane_x + 35;//发生爆炸的子弹，重新回到战机的子弹口
 			dadiji.plane_x = rand() % 400;  //大敌机从上面的随机位置重新出现
@@ -142,12 +181,12 @@ void CAirplaneWarView::RefreshPlane(CDC *cDC)
 					xiaodiji[i1].plane_x = rand() % 400;
 				xiaodiji[i1].plane_y = -30;
 			
-				zidan[j1].JIDRAW_Boom(cDC, xx1, yy1);//爆炸状态
+				zidan[j1].JIDRAW_Boom(cDC, xx1, yy1, gh);//爆炸状态
 				zidan[j1].plane_y = zhanji.plane_y - 20;
 				zidan[j1].plane_x = zhanji.plane_x + 35;//子弹重新回到战机子弹口
 			}
 		}
-		zidan[j1].JIDRAW(cDC);//画子弹
+		zidan[j1].JIDRAW(cDC, gh);//画子弹
 	}
  
 	//小敌机
@@ -157,7 +196,7 @@ void CAirplaneWarView::RefreshPlane(CDC *cDC)
 		{
 			int xxx = zhanji.plane_x;
 			int yyy = zhanji.plane_y;
-			zhanji.JIDRAW_Boom(cDC, xxx, yyy);//若碰撞，发生战机爆炸
+			zhanji.JIDRAW_Boom(cDC, xxx, yyy, gh);//若碰撞，发生战机爆炸
 			Sleep(500);//停止500ms
 			xiaodiji[j].plane_x = rand() % 400;
 			while (dadiji.plane_x<20)
@@ -174,7 +213,7 @@ void CAirplaneWarView::RefreshPlane(CDC *cDC)
 			xiaodiji[j].plane_y = 0;
 		}
 		xiaodiji[j].plane_y += 5;//小战机下降
-		xiaodiji[j].JIDRAW(cDC);
+		xiaodiji[j].JIDRAW(cDC, gh);
 	}
  
 	//大敌机
@@ -182,7 +221,7 @@ void CAirplaneWarView::RefreshPlane(CDC *cDC)
 	{
 		int xxx = zhanji.plane_x;
 		int yyy = zhanji.plane_y;
-		zhanji.JIDRAW_Boom(cDC, xxx, yyy);//若碰撞，战机爆炸，大敌机重新随机降落
+		zhanji.JIDRAW_Boom(cDC, xxx, yyy, gh);//若碰撞，战机爆炸，大敌机重新随机降落
 		Sleep(500);//停止500ms
 		dadiji.plane_x = rand() % 400;
 		while (dadiji.plane_x<20)
@@ -195,7 +234,7 @@ void CAirplaneWarView::RefreshPlane(CDC *cDC)
 		dadiji.plane_y = dadiji.plane_y + 5;
 	else
 		dadiji.plane_y = 0;//若大飞机飞出游戏界面 ，重新随机降落
-	dadiji.JIDRAW(cDC); //画大敌机
+	dadiji.JIDRAW(cDC, gh); //画大敌机
 	
 }
 
@@ -204,9 +243,10 @@ void CAirplaneWarView::OnTimer(UINT_PTR nIDEvent)
 	CDC *cDC = this->GetDC();   //获得当前窗口的DC   
 	CRect rect;
 	GetClientRect(rect);
-	cDC->FillSolidRect(rect, RGB(255, 255, 255));
+	//cDC->FillSolidRect(rect, RGB(255, 255, 255));
 	//InvalidateRect(&rect, FALSE);
-	RefreshPlane(cDC);
+	GameRunDraw();
+	
 	ReleaseDC(cDC);
 	CView::OnTimer(nIDEvent);
 }
