@@ -63,7 +63,6 @@ int CAirplaneWarView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	int x_num = 50;
 	for (int i = 0; i < 5; i++)
 	{
-		xiaodiji[i].img = Image::FromFile(_T("res//xiaodiji.png"));
 		xiaodiji[i].plane_x += x_num;//开始时，小飞机的横坐标相隔30
 		x_num += 50;
 		xiaodiji[i].plane_y -= x_num;//开始时，小飞机的纵坐标相隔30，起到延迟出现的效果
@@ -72,15 +71,10 @@ int CAirplaneWarView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	int num = 0;
 	for (int j2 = 0;j2 < 30;j2++)
 	{
-		zidan[j2].img = Image::FromFile(_T("res//zidan.png"));
-		zidan[j2].img_boom = Image::FromFile(_T("res//zidan_boom.png"));
 		zidan[j2].plane_y -= (num+20);//开始时，子弹的纵坐标相隔25，起到延迟出现的效果
 		zidan[j2].plane_x = zhanji.plane_x + 35;//子弹的横坐标在战机的正中间
 		num += 50;
 	}
-	dadiji.img = Image::FromFile(_T("res//dadiji.png"));
-	zhanji.img = Image::FromFile(_T("res//zhanji.png"));
-	zhanji.img_boom = Image::FromFile(_T("res//zhanji_boom.png"));
 	img_bkg = Image::FromFile(_T("res//bkg.png"));
 	return 0;
 }
@@ -127,10 +121,10 @@ void CAirplaneWarView::GameRunDraw()
 	gh.Clear(Color::White); //清除背景
 	gh.ResetClip();
 
-	gh.DrawImage(img_bkg, rect.left, rect.top, rect.Width(), rect.Height());
+	gh.DrawImage(img_bkg, rect.left, rect.top, rect.Width(), rect.Height()); //绘制背景
 	//gh.DrawImage(img, m_rect);
 
-	RefreshPlane(cDC, &gh);
+	RefreshPlane(cDC, &gh); //绘制飞机
 	
 	BitBlt(hdc, 0, 0, rect.Width(), rect.Height(), m_dcMemory.GetSafeHdc(), 0, 0, SRCCOPY);
 	

@@ -30,6 +30,7 @@ public:
 	DECLARE_MESSAGE_MAP()
 
 private:
+	//GdiPlus所需的变量
 	ULONG_PTR m_tokenGdiplus;
 	Gdiplus::GdiplusStartupInput input;
 	Gdiplus::GdiplusStartupOutput output;
